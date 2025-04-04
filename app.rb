@@ -2,8 +2,6 @@ require 'sinatra'
 require 'json'
 require 'securerandom'
 
-
-
 # simulacion de base de datos
 USERS = { "user" => "clave123" }
 LOGGED_USERS = {}
@@ -55,16 +53,11 @@ post '/create_product' do
   end
 end
 
-get '/queue_info' do
+get '/queue_info/:queue_id' do
   content_type :json
   require_auth
 
-  begin
-    data = JSON.parse(request.body.read)
-    queue_id = data["queue_id"]
-  rescue JSON::ParserError
-    halt 400, { error: "JSON invalido" }.to_json
-  end
+  queue_id = params["queue_id"]
 
   halt 400, { error: "Favor ingresa el queue_id" }.to_json if queue_id.strip.empty? || queue_id.nil?
 

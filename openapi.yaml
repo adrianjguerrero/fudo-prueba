@@ -48,6 +48,13 @@ paths:
   /create_product:
     post:
       summary: "Creacion de producto"
+      parameters:
+        - name: AUTHORIZATION
+          in: header
+          description: Token de autorización para acceder al endpoint
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -76,18 +83,22 @@ paths:
                 properties:
                   error:
                     type: string
-  /queue_info:
-    post:
+  /queue_info/{queue_id}:
+    get:
       summary: "Consulta sobre el producto encolado"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                queue_id:
-                  type: string
+      parameters:
+        - name: queue_id
+          in: path
+          description: ID de la cola del producto a buscar
+          required: true
+          schema:
+            type: integer
+        - name: AUTHORIZATION
+          in: header
+          description: Token de autorización para acceder al endpoint
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: "Devuelve el estado de creación o el producto"
