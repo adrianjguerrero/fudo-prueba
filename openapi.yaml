@@ -51,7 +51,7 @@ paths:
       parameters:
         - name: AUTHORIZATION
           in: header
-          description: Token de autorización para acceder al endpoint
+          description: "Token de autorización para acceder al endpoint"
           required: true
           schema:
             type: string
@@ -85,23 +85,23 @@ paths:
                     type: string
   /queue_info/{queue_id}:
     get:
-      summary: "Consulta sobre el producto encolado"
+      summary: "Consulta sobre el proceso encolado"
       parameters:
         - name: queue_id
           in: path
-          description: ID de la cola del producto a buscar
+          description: "ID de la cola del proceso a buscar"
           required: true
           schema:
-            type: integer
+            type: string
         - name: AUTHORIZATION
           in: header
-          description: Token de autorización para acceder al endpoint
+          description: "Token de autorización para acceder al endpoint"
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: "Devuelve el estado de creación o el producto"
+          description: "Devuelve el estado del proceso encolado o el producto"
           content:
             application/json:
               schema:
@@ -109,7 +109,7 @@ paths:
                   - $ref: '#/components/schemas/product'
                   - $ref: '#/components/schemas/status_queue
         '400':
-          description: "Fallo al buscar producto encolado"
+          description: "Fallo al buscar el proceso encolado"
           content:
             application/json:
               schema:
@@ -118,7 +118,7 @@ paths:
                   error:
                     type: string
         '404':
-          description: "Cola de producto no encontrada"
+          description: "Proceso encolado no encontrado"
           content:
             application/json:
               schema:
@@ -126,7 +126,48 @@ paths:
                 properties:
                   error:
                     type: string
-
+  /product/{product_id}:
+    get:
+      summary: "Consulta sobre el producto"
+      parameters:
+        - name: product_id
+          in: path
+          description: "ID del producto a buscar"
+          required: true
+          schema:
+            type: string
+        - name: AUTHORIZATION
+          in: header
+          description: "Token de autorización para acceder al endpoint"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Devuelve el producto buscado"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/product'
+        '400':
+          description: "Fallo al buscar el producto"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: "Producto no encontrado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 components:
   schemas:
     product:
