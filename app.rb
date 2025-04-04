@@ -6,6 +6,7 @@ require 'rack/deflater'
 # se encargare de hacerle gzip a nuestras peticiones si asi las quere el cliente
 use Rack::Deflater
 
+
 # simulacion de base de datos
 USERS = { "user" => "clave123" }
 LOGGED_USERS = {}
