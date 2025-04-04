@@ -45,4 +45,92 @@ paths:
                 properties:
                   error:
                     type: string
-  
+  /create_product:
+    post:
+      summary: "Creacion de producto"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '202':
+          description: "Se encola la creación del producto"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: "Fallo al encolar producto para su creación"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /queue_info:
+    post:
+      summary: "Consulta sobre el producto encolado"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                queue_id:
+                  type: string
+      responses:
+        '200':
+          description: "Devuelve el estado de creación o el producto"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/product'
+                  - $ref: '#/components/schemas/status_queue
+        '400':
+          description: "Fallo al buscar producto encolado"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: "Cola de producto no encontrada"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+components:
+  schemas:
+    product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - name
+
+    queue_id:
+      type: string
+      enum:
+        - in_queue
+        - processing
+        - done 
