@@ -31,10 +31,7 @@ post '/auth' do
   end
 end
 
-get '/protegido' do
-  require_auth
-  {texto:'hola'}.to_json
-end
+
 
 
 def is_authenticate?

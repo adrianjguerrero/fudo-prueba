@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: API de Productos
+  version: "1.0.0"
+paths:
+  /auth:
+    post:
+      summary: "Autenticación de usuario"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: string
+                contrasena:
+                  type: string
+      responses:
+        '200':
+          description: "Autenticación exitosa"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '500':
+          description: "Fallo autenticando"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '404':
+          description: "Credenciales incorrectas"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  
