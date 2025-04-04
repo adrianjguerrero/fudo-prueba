@@ -70,9 +70,24 @@ get '/queue_info/:queue_id' do
     body({ status_queue: details_queue[:status]}.to_json)
   else
     product = PRODUCTS[details_queue[:product_id]]
-    puts PRODUCTS
     body({ product: product }.to_json)
   end
+end
+
+get '/product/:product_id' do
+  content_type :json
+  require_auth
+
+  product_id = params["product_id"]
+
+  halt 400, { error: "Favor ingresa un product_id" }.to_json if product_id.strip.empty? || product_id.nil?
+
+  product = PRODUCTS[product_id]
+
+  halt 404, { error: "Producto no encontrado" }.to_json if product.nil?
+
+  status 200
+  body({ product: product }.to_json)
 end
 
 
