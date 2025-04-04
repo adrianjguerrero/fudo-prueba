@@ -1,6 +1,10 @@
 require 'sinatra'
 require 'json'
 require 'securerandom'
+require 'rack/deflater'
+
+# se encargare de hacerle gzip a nuestras peticiones si asi las quere el cliente
+use Rack::Deflater
 
 # simulacion de base de datos
 USERS = { "user" => "clave123" }
@@ -102,7 +106,6 @@ get '/openapi.yaml' do
   cache_control :no_store
   send_file 'openapi.yaml'
 end
-
 
 def create_product_async(queue_id, product_name)
   PRODUCTS_QUEUE[queue_id] = {status: 'processing', product_id: nil}
