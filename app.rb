@@ -8,6 +8,8 @@ LOGGED_USERS = {}
 
 PRODUCTS = {}
 PRODUCTS_QUEUE = {}
+
+
 post '/auth' do
   content_type :json
 
@@ -90,6 +92,16 @@ get '/product/:product_id' do
   body({ product: product }.to_json)
 end
 
+
+get '/AUTHORS' do
+  cache_control :max_age => 24 * 3600
+  send_file 'AUTHORS'
+end
+
+get '/openapi.yaml' do
+  cache_control :no_store
+  send_file 'openapi.yaml'
+end
 
 
 def create_product_async(queue_id, product_name)
