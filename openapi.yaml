@@ -25,7 +25,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  token:
+                  access_token:
                     type: string
         '500':
           description: "Fallo autenticando"
@@ -38,6 +38,46 @@ paths:
                     type: string
         '404':
           description: "Credenciales incorrectas"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /refresh_token:
+    post:
+      summary: "Actualización de token"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: "Actualización exitosa"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '400':
+          description: "JSON invalido"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '401':
+          description: "Refresh token inválido o expirado"
           content:
             application/json:
               schema:
@@ -107,7 +147,7 @@ paths:
               schema:
                 oneOf:
                   - $ref: '#/components/schemas/product'
-                  - $ref: '#/components/schemas/status_queue
+                  - $ref: '#/components/schemas/status_queue'
         '400':
           description: "Fallo al buscar el proceso encolado"
           content:
@@ -148,8 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/product'
+                $ref: '#/components/schemas/product'
         '400':
           description: "Fallo al buscar el producto"
           content:
@@ -180,7 +219,7 @@ components:
       required:
         - name
 
-    queue_id:
+    status_queue:
       type: string
       enum:
         - in_queue

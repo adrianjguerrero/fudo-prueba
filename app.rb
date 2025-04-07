@@ -6,7 +6,7 @@ require 'rack/deflater'
 require "sinatra/reloader" if development?
 
 require './helpers/auth'
-require './workers/create_product.rb'
+require './workers/create_product'
 
 # se encargare de hacerle gzip a nuestras peticiones si asi las quere el cliente
 use Rack::Deflater
