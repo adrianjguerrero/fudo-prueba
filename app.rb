@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json'
 require 'securerandom'
 require 'rack/deflater'
+require "sinatra/reloader" if development?
 
 # se encargare de hacerle gzip a nuestras peticiones si asi las quere el cliente
 use Rack::Deflater
