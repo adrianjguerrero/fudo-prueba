@@ -10,10 +10,14 @@ use Rack::Deflater
 
 # simulacion de base de datos
 USERS = { "user" => "clave123" }
-LOGGED_USERS = {}
+SECRET_KEY = 'CLAVE_SECRETA'
+ACCESS_TOKEN_EXPIRATION = 2 * 60 # 2 minutos
+REFRESH_TOKEN_EXPIRATION = 1 * 24 * 60 * 60 # 1 dia
 
+LOGGED_USERS = {}
 PRODUCTS = {}
 PRODUCTS_QUEUE = {}
+REFRESH_TOKENS = {}
 
 
 configure :test, :development do
