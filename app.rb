@@ -37,11 +37,28 @@ post '/auth' do
 
   if USERS[user] && USERS[user] == password
     token = SecureRandom.hex(16)
-    LOGGED_USERS[token] = user
-    { token: token }.to_json
+    access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
+    { access_token: access_token, refresh_token: refresh_token }.to_json
   else
     halt 404, { error: "Fallo iniciando sesión" }.to_json
   end
+end
+
+post '/refresh_token' do
+  content_type :json
+  begin
+    data = JSON.parse(request.body.read)
+    refresh_token = data["refresh_token"]
+  rescue JSON::ParserError
+    halt 400, { error: "JSON inválido" }.to_json
+  end
+
+  user = validate_refresh_token(refresh_token)
+  halt 401, { error: "Refresh token inválido o expirado" }.to_json unless user
+
+  access_token = generate_access_token(user)
+  { access_token: access_token }.to_json
 end
 
 post '/create_product' do
