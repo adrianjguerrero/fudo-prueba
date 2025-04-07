@@ -14,6 +14,10 @@ PRODUCTS = {}
 PRODUCTS_QUEUE = {}
 
 
+configure :test, :development do
+  set :host_authorization, { permitted_hosts: [] }
+end
+
 post '/auth' do
   content_type :json
   begin
