@@ -4,6 +4,7 @@ GEM
     base64 (0.2.0)
     diff-lcs (1.6.0)
     logger (1.7.0)
+    multi_json (1.15.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.7.4)
@@ -42,6 +43,14 @@ GEM
       rack-protection (= 4.1.1)
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
+    sinatra-contrib (4.1.1)
+      multi_json (>= 0.0.2)
+      mustermann (~> 3.0)
+      rack-protection (= 4.1.1)
+      sinatra (= 4.1.1)
+      tilt (~> 2.0)
+    sinatra-reloader (1.0)
+      sinatra-contrib
     tilt (2.6.0)
 
 PLATFORMS
@@ -54,6 +63,7 @@ DEPENDENCIES
   rackup
   rspec
   sinatra (= 4.1.1)
+  sinatra-reloader
 
 BUNDLED WITH
    2.4.22

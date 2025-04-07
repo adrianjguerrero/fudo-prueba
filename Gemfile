@@ -6,3 +6,4 @@ gem 'puma'
 gem "rack"
 gem "rspec"
 gem "rack-test"
+gem 'sinatra-reloader'
