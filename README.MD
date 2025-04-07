@@ -22,7 +22,7 @@ Este proyecto utiliza Docker para su construcción y ejecución.
   docker compose up --build prueba-fudo
   ```
 
-  luego puedes omitir el parametro --build para correrlo
+  luego puedes omitir el parametro --build para correrlo, el proyecto estara corriendo en http://127.0.0.1:4567
 
 3. Para ejecutar los tests:
 
