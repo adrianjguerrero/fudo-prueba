@@ -90,4 +90,19 @@ RSpec.describe "Pruebas de endpoint" do
       expect(json).to have_key("product")
     end
   end
+
+  describe "pruebas de archivos" do
+    it "retorna el archivo AUTHORS con cache de 24 hs" do
+      get '/AUTHORS'
+      expect(last_response.status).to eq(200)
+      expect(last_response.body.strip).to eq("Adrian Guerrero")
+      expect(last_response.headers["Cache-Control"]).to include("max-age=#{24 * 3600}")
+    end
+
+    it "retorna openapi.yaml sin cache" do
+      get '/openapi.yaml'
+      expect(last_response.status).to eq(200)
+      expect(last_response.headers["Cache-Control"]).to include("no-store")
+    end
+  end
 end
