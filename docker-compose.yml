@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  prueba-fudo:
+    build: .
+    ports:
+      - "4567:4567"
+    volumes:
+      - .:/app
+  tests:
+    build: .
+    environment:
+      - RACK_ENV=test
+    volumes:
+      - .:/app
+    command: bundle exec rspec spec/spec_helper.rb
