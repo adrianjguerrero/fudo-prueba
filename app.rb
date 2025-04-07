@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'json'
+require 'jwt'
 require 'securerandom'
 require 'rack/deflater'
 require "sinatra/reloader" if development?

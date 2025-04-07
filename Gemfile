@@ -7,3 +7,4 @@ gem "rack"
 gem "rspec"
 gem "rack-test"
 gem 'sinatra-reloader'
+gem 'jwt'
