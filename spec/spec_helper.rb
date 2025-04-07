@@ -14,12 +14,12 @@ RSpec.describe "Pruebas de endpoint" do
   let(:valid_user) { { usuario: "user", contrasena: "clave123" } }
   let(:invalid_user) { { usuario: "usuario", contrasena: "error" } }
 
-  describe "POST /auth" do
+  describe "Pruebas de auth" do
     it "logea usuario y retorna un token" do
       post '/auth', valid_user.to_json, "CONTENT_TYPE" => "application/json"
       expect(last_response.status).to eq(200)
       json = JSON.parse(last_response.body)
-      expect(json).to have_key("token")
+      expect(json).to have_key("access_token")
     end
 
     it "falla login con credenciales invalidas" do
@@ -33,6 +33,16 @@ RSpec.describe "Pruebas de endpoint" do
       post '/auth', "not a json", "CONTENT_TYPE" => "application/json"
       expect(last_response.status).to eq(500)
     end
+
+    it "refresca el token" do
+      post '/auth', valid_user.to_json, "CONTENT_TYPE" => "application/json"
+      expect(last_response.status).to eq(200)
+      refresh_token = JSON.parse(last_response.body)["refresh_token"]
+      post '/refresh_token', { refresh_token: refresh_token }.to_json, "CONTENT_TYPE" => "application/json"
+      json = JSON.parse(last_response.body)
+      expect(last_response.status).to eq(200)
+      expect(json).to have_key("access_token")
+    end
   end
 
   describe "Endpoints de productos" do
@@ -40,7 +50,7 @@ RSpec.describe "Pruebas de endpoint" do
     before(:each) do
       # nos autenticamos
       post '/auth', valid_user.to_json, "CONTENT_TYPE" => "application/json"
-      @token = JSON.parse(last_response.body)["token"]
+      @token = JSON.parse(last_response.body)["access_token"]
     end
 
     def create_product(name = "leche")

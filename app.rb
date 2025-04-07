@@ -1,18 +1,26 @@
 require 'sinatra'
 require 'json'
+require 'jwt'
 require 'securerandom'
 require 'rack/deflater'
 require "sinatra/reloader" if development?
+
+require './helpers/auth'
+require './workers/create_product.rb'
 
 # se encargare de hacerle gzip a nuestras peticiones si asi las quere el cliente
 use Rack::Deflater
 
 # simulacion de base de datos
 USERS = { "user" => "clave123" }
-LOGGED_USERS = {}
+SECRET_KEY = 'CLAVE_SECRETA'
+ACCESS_TOKEN_EXPIRATION = 2 * 60 # 2 minutos
+REFRESH_TOKEN_EXPIRATION = 1 * 24 * 60 * 60 # 1 dia
 
+LOGGED_USERS = {}
 PRODUCTS = {}
 PRODUCTS_QUEUE = {}
+REFRESH_TOKENS = {}
 
 
 configure :test, :development do
@@ -32,11 +40,28 @@ post '/auth' do
 
   if USERS[user] && USERS[user] == password
     token = SecureRandom.hex(16)
-    LOGGED_USERS[token] = user
-    { token: token }.to_json
+    access_token = generate_access_token(user)
+    refresh_token = generate_refresh_token(user)
+    { access_token: access_token, refresh_token: refresh_token }.to_json
   else
     halt 404, { error: "Fallo iniciando sesión" }.to_json
   end
+end
+
+post '/refresh_token' do
+  content_type :json
+  begin
+    data = JSON.parse(request.body.read)
+    refresh_token = data["refresh_token"]
+  rescue JSON::ParserError
+    halt 400, { error: "JSON inválido" }.to_json
+  end
+
+  user = validate_refresh_token(refresh_token)
+  halt 401, { error: "Refresh token inválido o expirado" }.to_json unless user
+
+  access_token = generate_access_token(user)
+  { access_token: access_token }.to_json
 end
 
 post '/create_product' do
@@ -109,27 +134,4 @@ end
 get '/openapi.yaml' do
   cache_control :no_store
   send_file 'openapi.yaml'
-end
-
-def create_product_async(queue_id, product_name)
-  PRODUCTS_QUEUE[queue_id] = {status: 'processing', product_id: nil}
-  sleep 5
-  product_id = SecureRandom.uuid
-  PRODUCTS[product_id] = { id: product_id, nombre: product_name }
-  PRODUCTS_QUEUE[queue_id] = {status: 'done', product_id: product_id}
-end
-
-def is_authenticate?
-  auth_header = request.env["HTTP_AUTHORIZATION"]
-  return false unless auth_header
-
-  if LOGGED_USERS[auth_header]
-    true
-  else
-    false
-  end
-end
-
-def require_auth
-  return halt 401, { error: "No autenticado" }.to_json unless is_authenticate?
 end
